@@ -111,6 +111,10 @@ def main():
     if not token:
         print("FAIL: AGENTEXCHANGE_API_KEY secret missing or empty.")
         return 2
+    if token != token.strip() or not token.startswith("axk_"):
+        print("FAIL: API secret formatting does not match expected axk_ key (check for spaces or copied label).")
+        return 2
+    print("PASS: AgentExchange key format valid (secret contents hidden).")
 
     required = {"get_marketplace_guide", "whoami", "search_opportunities"}
     try:
