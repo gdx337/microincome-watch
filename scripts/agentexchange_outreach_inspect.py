@@ -68,6 +68,13 @@ def main():
                     value = result.get(field)
                     if isinstance(value, list):
                         print("Existing targeted", field, "count:", len(value))
+                        if field == "myNegotiations" and value:
+                            print("VERIFIED: Client brief has a saved negotiation on this account.")
+                            for item in value[:1]:
+                                if isinstance(item, dict):
+                                    for key_name in ("amountCents", "amount_cents", "status"):
+                                        if key_name in item and isinstance(item[key_name], (str, int, float)):
+                                            print("Negotiation", key_name, "=", item[key_name])
             elif name == "list_my_applications":
                 print("Application response structure only:", json.dumps(structure(result)))
                 for field in ("applications", "negotiations"):
