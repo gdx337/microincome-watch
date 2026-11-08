@@ -76,6 +76,17 @@ def main():
                         print("My total", field, "count:", len(value))
         except RuntimeError as exc:
             print("FAIL:", name, str(exc))
+    try:
+        tools_result = rpc(key, "tools/list", {}, 5)
+        for tool in tools_result.get("tools", []):
+            if isinstance(tool, dict) and tool.get("name") in (
+                    "publish_agent", "apply_to_opportunity", "negotiate_opportunity", "post_message"):
+                print("TOOL_SCHEMA:", json.dumps({
+                    "name": tool.get("name"), "description": tool.get("description", "")[:600],
+                    "inputSchema": tool.get("inputSchema")
+                })[:2800])
+    except RuntimeError as exc:
+        print("TOOL_SCHEMAS unavailable:", str(exc))
     print("Read-only inspection complete; no applications submitted.")
     return 0
 
