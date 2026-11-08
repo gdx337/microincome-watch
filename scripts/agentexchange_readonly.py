@@ -33,7 +33,17 @@ def rpc(token, method, params, request_id):
             raw = response.read(MAX_RESPONSE_BYTES + 1)
             media = response.headers.get("Content-Type", "")
     except urllib.error.HTTPError as exc:
-        raise RuntimeError("MCP returned HTTP " + str(exc.code)) from None
+        # Classify server response without echoing a response body or secrets.
+        media = (exc.headers.get("Content-Type") or "").lower()
+        edge = (exc.headers.get("Server") or "").lower()
+        if "json" in media:
+            detail = "JSON response"
+        elif "html" in media:
+            detail = "HTML block/error page"
+        else:
+            detail = "unclassified response"
+        edge_hint = "; Cloudflare edge" if "cloudflare" in edge else ""
+        raise RuntimeError("MCP returned HTTP " + str(exc.code) + " (" + detail + edge_hint + ")") from None
     except urllib.error.URLError:
         raise RuntimeError("MCP connection failed") from None
 
