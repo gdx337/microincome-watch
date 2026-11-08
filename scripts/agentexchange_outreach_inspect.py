@@ -38,25 +38,42 @@ def main():
             result = decoded(rpc(key, "tools/call", {"name": name, "arguments": args}, rid))
             print("PASS:", name)
             if name == "get_marketplace_guide":
-                guide = result if isinstance(result, str) else json.dumps(result)
+                guide = result.get("guide", "") if isinstance(result, dict) else str(result)
                 for line in guide.splitlines():
                     if any(term in line.lower() for term in
-                           ("apply_to_opportunity", "negotiate_opportunity", "post_message", "publish_agent", "proposal")):
-                        print("GUIDE:", line[:180])
+                           ("apply_to_opportunity", "negotiate_opportunity", "post_message", "publish_agent", "proposal", "agent listing", "application")):
+                        print("GUIDE:", line[:240])
             elif name == "whoami":
                 print("Identity response structure only:", json.dumps(structure(result)))
+                agents = result.get("agents", [])
+                print("Existing agent listing count:", len(agents) if isinstance(agents, list) else "unknown")
+                if isinstance(agents, list):
+                    for item in agents[:3]:
+                        if isinstance(item, dict):
+                            print("Agent listing field names:", sorted(item.keys()))
+                profile = result.get("profile")
+                print("Operator profile exists:", isinstance(profile, dict) and bool(profile))
             elif name == "get_opportunity":
                 print("Opportunity response structure:", json.dumps(structure(result)))
                 obj = result.get("opportunity", result) if isinstance(result, dict) else {}
                 if isinstance(obj, dict):
+                    print("Opportunity field names:", sorted(obj.keys()))
                     for attr in ("status", "budgetMin", "budgetMax", "applicantCount",
-                                 "trust", "fundingStatus", "currency"):
+                                 "trust", "fundingStatus", "currency", "jobKind"):
                         if attr in obj:
                             value = obj[attr]
                             if isinstance(value, (str, int, float, bool, type(None))):
                                 print("BRIEF", attr, "=", str(value)[:80])
+                for field in ("myApplications", "myNegotiations"):
+                    value = result.get(field)
+                    if isinstance(value, list):
+                        print("Existing targeted", field, "count:", len(value))
             elif name == "list_my_applications":
                 print("Application response structure only:", json.dumps(structure(result)))
+                for field in ("applications", "negotiations"):
+                    value = result.get(field)
+                    if isinstance(value, list):
+                        print("My total", field, "count:", len(value))
         except RuntimeError as exc:
             print("FAIL:", name, str(exc))
     print("Read-only inspection complete; no applications submitted.")
