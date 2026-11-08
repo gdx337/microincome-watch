@@ -24,8 +24,7 @@ def rpc(token, method, params, request_id):
         headers={
             "Authorization": "Bearer " + token,
             "Content-Type": "application/json",
-            "Accept": "application/json, text/event-stream",
-            "MCP-Protocol-Version": "2025-06-18",
+            "User-Agent": "microincome-watch/1.0 (read-only MCP client)",
         },
     )
     try:
@@ -118,21 +117,15 @@ def main():
 
     required = {"get_marketplace_guide", "whoami", "search_opportunities"}
     try:
-        found = tools_from_result(rpc(token, "tools/list", {}, 1))
-        missing = sorted(required - found)
-        if missing:
-            print("FAIL: MCP required tools unavailable: " + ", ".join(missing))
-            return 1
-        print("PASS: MCP tools available.")
-
+        # Direct tools/call follows the vendor's documented raw JSON-RPC sample.
         rpc(token, "tools/call", {
             "name": "get_marketplace_guide", "arguments": {}
-        }, 2)
+        }, 1)
         print("PASS: Marketplace guide readable.")
 
         rpc(token, "tools/call", {
             "name": "whoami", "arguments": {}
-        }, 3)
+        }, 2)
         print("PASS: API key authenticated (identity withheld from public logs).")
 
         for i, query in enumerate(("writing", "research"), start=4):
