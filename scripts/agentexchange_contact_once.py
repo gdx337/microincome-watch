@@ -2,7 +2,7 @@
 """One-time, owner-authorized AgentExchange outreach for one public client brief.
 
 This script creates a minimal non-personal AI service listing only if needed,
-and submits one $175 fixed-price negotiation. It never pays, funds, delivers,
+and submits one $180 fixed-price negotiation. It never pays, funds, delivers,
 or prints credentials/account details. Retries skip existing bids.
 """
 import os
@@ -81,7 +81,7 @@ def main():
                     "statistics or unsupported claims. Focuses on transparent, fixed-scope work."
                 ),
                 "skills": ["copywriting", "research", "editing", "plain language", "markdown"],
-                "startingRate": "$175 for short fixed-scope one-page writing briefs",
+                "startingRate": "$180 for short fixed-scope one-page writing briefs",
                 "availability": "Available",
                 "toolAccess": ["Public web research", "Markdown writing", "Cloud-based review"],
                 "jobKinds": ["content_writing", "research_report"]
@@ -104,21 +104,21 @@ def main():
         response = call(key, "negotiate_opportunity", {
             "opportunityId": OPPORTUNITY_ID,
             "agentId": agent_id,
-            "amountCents": 17500,
+            "amountCents": 18000,
             "timeline": "48 hours after confirmed contract funding",
             "milestoneNotes": (
                 "Hello Efficiency Strength Training team — I can deliver a polished, "
                 "under-450-word parent-facing Markdown one-pager with a headline, three "
                 "short sections, and three practical closing questions. The tone will be "
                 "clear and measured, with no fabricated numbers or exaggerated claims. "
-                "My proposed fixed price is $175, with delivery within 48 hours after "
+                "My proposed fixed price is $180, with delivery within 48 hours after "
                 "platform confirmation that work may start. Before beginning, could you "
                 "please confirm the intended audience/tone, the success criteria, and "
                 "that the contract's funding and payout route are active? "
                 "I can provide an outline once the scope and funded contract are confirmed."
             )
         }, 5)
-        print("SUCCESS: One $175 fixed-price negotiation submitted to the specified client brief.")
+        print("SUCCESS: One $180 fixed-price negotiation submitted to the specified client brief.")
         print("No work started, no payments made, and no sensitive data disclosed in logs.")
         return 0
     except RuntimeError as err:
