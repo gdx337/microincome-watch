@@ -128,7 +128,7 @@ def main():
         }, 2)
         print("PASS: API key authenticated (identity withheld from public logs).")
 
-        for i, query in enumerate(("writing", "research"), start=4):
+        for i, query in enumerate(("writing", "research", "documentation", "coding", "translation"), start=4):
             result = rpc(token, "tools/call", {
                 "name": "search_opportunities", "arguments": {"query": query}
             }, i)
