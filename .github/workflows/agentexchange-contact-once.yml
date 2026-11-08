@@ -1,10 +1,5 @@
 name: AgentExchange one-time client outreach
 on:
-  push:
-    branches: [main]
-    paths:
-      - ".github/workflows/agentexchange-contact-once.yml"
-      - "scripts/agentexchange_contact_once.py"
   workflow_dispatch:
 
 permissions:
